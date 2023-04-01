@@ -1,0 +1,65 @@
+{
+  "version": "2.0.0",
+  "windows": {
+    "options": {
+      "shell": {
+        "executable": "cmd.exe",
+        "args": [
+          "/C",
+          // The path to VsDevCmd.bat depends on the version of Visual Studio you have installed.
+          "VsDevCmd.bat",
+          "-arch=x64",
+          "&&"
+        ]
+      }
+    }
+  },
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "build",
+      "command": "cl.exe",
+      "args": [
+        "/EHsc",
+        "*.cpp",
+        "/FeBuilds\\main.exe",
+        "/link OGL/lib/x64/freeglut.lib",
+      ],
+      "problemMatcher": ["$msCompile"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "dependsOn":["Copy dll"]
+
+    },
+    {
+      "type": "shell",
+      "label": "Copy dll",
+      "command": "xcopy",
+      "args": [
+        "\"OGL\\lib\\x64\\freeglut.dll\"",
+      "\"Builds\\\"",
+      "/s",
+      "/r", 
+      "/y", 
+      "/q"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "type": "shell",
+      "label": "run the file",
+      "command": "Builds\\main.exe",
+      "args": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+
+    }
+  ]
+}
